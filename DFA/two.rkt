@@ -95,10 +95,11 @@
   #;(time (println (interactive-two-loop '(a b) 4 10 '() '() (oracle-read-func oracle1))))
   ; (ab|cd)*
   ; very long time
-  ; (println (interactive-two-loop '(a b c d) 5 8 '() '()))
-  ; timeout
+  ; 115 iters, 272s
+  (time (println (interactive-two-loop '(a b c d) 3 6 '() '() (oracle-read-func oracle2))))
+  ; 51 iters, 110s
   (time (println (interactive-two-loop
-                  '(a b c d) 5 6
+                  '(a b c d) 3 6
                   '((a b) (c d) (a b c d) (c d a b) (a b a b) (c d c d) (a b a b a b) (c d c d c d))
                   '()
                   (oracle-read-func oracle2)
