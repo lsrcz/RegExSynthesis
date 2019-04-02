@@ -13,3 +13,8 @@
                            (dfanode #f '((d . 4)))
                            (dfanode #t '((a . 1) (c . 2)))
                            (dfanode #t '((a . 1) (c . 2))))))
+
+
+(define (oracle-read-func oracle)
+  (lambda (str) (let ([ret (dfa-match oracle str)]) (begin (display str) (display ": ") (displayln ret) ret))))
+

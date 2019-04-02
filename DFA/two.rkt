@@ -74,10 +74,6 @@
           (unsat))))
   (iter initgood initbad 1))
 
-(define (oracle-read-func oracle)
-  (lambda (str) (let ([ret (dfa-match oracle str)]) (begin (display str) (display ": ") (displayln ret) ret))))
-
-
 
 (define (main)
   ; (a|b)*abb
