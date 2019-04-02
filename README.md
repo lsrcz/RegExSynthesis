@@ -2,39 +2,39 @@
 
 ## Matching the RegEx by building the NFA
 
-In the directory [RegExNFA](./RegExNFA/). I wrote a simple RegEx engine by converting the RegExes to NFAs, and eliminate the epsilon transitions. The method is straightforward but it encounted severe scalability issue. It cannot synthesize any non-trivial RegEx before using up the RAM of my PC.
+In the directory [RegExNFA](./RegExNFA/). I wrote a simple RegEx engine by converting the RegExes to NFAs, and eliminate the epsilon transitions. The method is straightforward but it encountered severe scalability issue. It cannot synthesize any non-trivial RegEx before using up the RAM of my PC.
 
-Converting the RegEx to NFA is not very simple, and it's hard to write the function in a solver-friendly way. So didn't go deeper.
+Converting the RegEx to NFA is not very simple, and it is hard to write the function in a solver-friendly way. So I did not go deeper.
 
 ## Directly synthesize the DFA
 
-To deal with the scalability issue, I tried to avoid the process of building the NFAs. To simplify the problem, I tried to directly synthesize the DFAs. The code is in [DFA](./DFA/).
+To deal with the scalability issue, I tried to avoid the process of building the NFAs. To simplify the problem, I tried to synthesize the DFAs directly. The code is in [DFA](./DFA/).
 
 Using a very simple encoding, I successfully synthesized some simple automata. The sketch is roughly a 2-d table for the transition function.
 
-I implemented 3 interaction models.
+I implemented three interaction models.
 
-1. The synthesizer proposes the strings, the user identifies whether they are acceptable.
+1. The synthesizer proposes the strings, and the user identifies whether they are acceptable.
 2. The synthesizer proposes two DFAs and a string that causes different behavior of the DFAs.
-3. Non interactive model. Use a DFA as a reference implementation.
+3. Noninteractive model. Use a DFA as a reference implementation.
 
-For the interaction synthesis, the user's response is simulated by the oracle. And it seems that the two interaction models need roughly the same rounds to get an appropriate DFA. While using a reference implementation is much faster.
+For the interaction synthesis, the user's response is simulated by the oracle. It seems that the two interaction models need roughly the same rounds to get an appropriate DFA. While using a reference implementation is much faster.
 
 ## Directly synthesize the RegEx, using the solver to match the RegEx with strings
 
-Finally it comes to me that I don't need the automata. I can use the solver to directly decide if an string matches the RegEx. 
+Finally, it came to me that I did not need the automata. I could use the solver to directly decide if a string matches the RegEx.
 
-The basic operators of the RegEx is concatentation, union and Kleene star. Nothing need to be done with the concatentation operator. For the union operator, the matcher will introduce a new boolean symbolic value, and use it to decide that the string should match the left part or the right part.
+The basic operators of the RegEx are concatenation, union and Kleene star. Nothing needs to be done with the concatenation operator. For the union operator, the matcher will introduce a new boolean symbolic value and use it to decide that the string should match the left part or the right part.
 
-But dealing with the Kleene star is a bit tricky. The key idea is that we can limit the input string's size, and ensure that no pattern repeats more than `starnum` times. Then the Kleene star `r` can be reduced to
+However, dealing with the Kleene star is a bit tricky. The key idea is that we can limit the input string's size, and ensure that no pattern repeats more than `starnum` times. Then the Kleene star `r` can be reduced to
 
 ```
 (eps)|r((eps)|r((eps)|r(...)))
 ```
 
-By limiting the depth of the reduction, we can get a star-free regular expression with a reasonable size. The new regular expression is not equivalent to the original one, but they acts the same on the input strings. So this reduction can ensure the correctness of the solution under the assumption of no pattern repeats more than `starnum` times.
+By limiting the depth of the reduction, we can get a star-free regular expression with a reasonable size. The new regular expression is not equivalent to the original one, but they act the same on the input strings. So this reduction can ensure the correctness of the solution under the assumption of no pattern repeats more than `starnum` times.
 
-I wrote two examples. One is a regular expression for 000-255, another is for every positive number without leading zeros.
+I wrote two examples. One is a regular expression for 000-255, the other is for every positive number without leading zeros.
 
 1. 000-255. I didn't implement the lookahead constructs so the handwritten regex is `[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]`. The sketch is defined as follows
 
@@ -56,7 +56,7 @@ I wrote two examples. One is a regular expression for 000-255, another is for ev
 
 The synthesizer successfully synthesized `(((([1-9][0-9]|2[0-4][0-9])|[0-9])|2[0-5][0-5])|1[0-9][0-9])` in 12s, with 25 examples.
 
-2. Positive number without leading zeros. The handwritten regex is `0|[1-9][0-9]*`. The sketch is defined as follows
+2. Positive numbers without leading zeros. The handwritten regex is `0|[1-9][0-9]*`. The sketch is defined as follows
 
 ```racket
 (define (??numstar)
@@ -72,4 +72,4 @@ The synthesizer successfully synthesized `(((([1-9][0-9]|2[0-4][0-9])|[0-9])|2[0
 
 The synthesizer successfully synthesized `([0-9]|[1-9]([0-9])*)` in 13s, with 11 examples.
 
-I didn't implement the interactive synthesize for this method, since it could be implemented with the same techniques for synthesizing the DFAs. The code is in [RegExEncoding](./RegExEncoding/).
+I did not implement interactive synthesis for this method since it could be implemented with the same techniques for synthesizing the DFAs. The code is in [RegExEncoding](./RegExEncoding/).
