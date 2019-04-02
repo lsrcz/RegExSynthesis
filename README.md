@@ -8,7 +8,7 @@ Converting the RegEx to NFA is not very simple, and it's hard to write the funct
 
 ## Directly synthesize the DFA
 
-To deal with the scalability issue, I tried to avoid the process of building the NFAs. To simplify the problem, I tried to directly synthesize the DFAs.
+To deal with the scalability issue, I tried to avoid the process of building the NFAs. To simplify the problem, I tried to directly synthesize the DFAs. The code is in [DFA](./DFA/).
 
 Using a very simple encoding, I successfully synthesized some simple automata. The sketch is roughly a 2-d table for the transition function.
 
@@ -22,7 +22,7 @@ For the interaction synthesis, the user's response is simulated by the oracle. A
 
 ## Directly synthesize the RegEx, using the solver to match the RegEx with strings
 
-Finally it comes to me that I don't need the automata. I can use the solver to directly decide if an string matches the RegEx.
+Finally it comes to me that I don't need the automata. I can use the solver to directly decide if an string matches the RegEx. 
 
 The basic operators of the RegEx is concatentation, union and Kleene star. Nothing need to be done with the concatentation operator. For the union operator, the matcher will introduce a new boolean symbolic value, and use it to decide that the string should match the left part or the right part.
 
@@ -74,4 +74,4 @@ The synthesizer successfully synthesized `(((([1-9][0-9]|2[0-4][0-9])|[0-9])|2[0
 
 The synthesizer successfully synthesized `([0-9]|[1-9]([0-9])*)` in 13s, with 11 examples.
 
-I didn't implement the interactive synthesize for this method, since it could be implemented with the same techniques for synthesizing the DFAs.
+I didn't implement the interactive synthesize for this method, since it could be implemented with the same techniques for synthesizing the DFAs. The code is in [RegExEncoding](./RegExEncoding/).
