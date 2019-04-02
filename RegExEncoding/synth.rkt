@@ -6,6 +6,8 @@
          rosette/lib/angelic
          rosette/lib/synthax)
 
+(require racket/set)
+
 (require "match.rkt"
          "model.rkt")
 
@@ -44,19 +46,32 @@
     (if (null? gl)
         #t
         (and (car (regex-match-wrapper r (car gl) starnum)) (glclause (cdr gl)))))
-  
+  #|(define oriset (symbolics r))
   (define (blclause bl)
-    (define oriset (symbolics r))
     (if (null? bl)
         (cons #t '())
         (begin
           (define ret (regex-match-wrapper r (car bl) starnum))
-          (define newset (filter (lambda (x) (not (membersym x oriset))) (symbolics (cdr ret))))
+          (define newset (time (filter (lambda (x) (not (membersym x oriset))) (symbolics (cdr ret)))))
+          (define nxt (blclause (cdr bl)))
+          (cons (and (not (car ret)) (car nxt)) (append newset (cdr nxt))))))|#
+  (define oriset (list->set (symbolics r)))
+  (define (blclause bl)
+    (if (null? bl)
+        (cons #t '())
+        (begin
+          (define ret (regex-match-wrapper r (car bl) starnum))
+          (define newset (filter (lambda (x) (not (set-member? oriset x))) (symbolics (cdr ret))))
           (define nxt (blclause (cdr bl)))
           (cons (and (not (car ret)) (car nxt)) (append newset (cdr nxt))))))
-  (define gc (glclause gl))
-  (define bcp (blclause bl))
-  (define model (synthesize #:forall (cdr bcp) #:guarantee (assert (and gc (car bcp)))))
+  (displayln "Build constraints for good strings")
+  (define gc (time (glclause gl)))
+  (displayln "Build constraints for bad strings")
+  (define bcp (time (blclause bl)))
+  (displayln "Total symbolic values")
+  (displayln (length (symbolics (and gc (car bcp)))))
+  (displayln "Synthesis")
+  (define model (time (synthesize #:forall (cdr bcp) #:guarantee (assert (and gc (car bcp))))))
   (if (unsat? model)
       #f
       model))
@@ -66,4 +81,8 @@
   (print sereg)
   (print (solve-match sereg '(2) 2))
   (print (solve-match sereg '(3) 2))
-  (print (evaluate sereg (solve-nmatch sereg '(2) 2))))
+  (print (evaluate sereg (solve-nmatch sereg '(2) 2)))
+  (define sk2 (choose* (fromto 0 9) (single 10)))
+  (define m2 (solve-match sk2 (list 1) 3))
+  (print-regex (evaluate sk2 m2))
+  (newline))
