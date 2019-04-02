@@ -34,8 +34,6 @@ But dealing with the Kleene star is a bit tricky. The key idea is that we can li
 
 By limiting the depth of the reduction, we can get a star-free regular expression with a reasonable size. The new regular expression is not equivalent to the original one, but they acts the same on the input strings. So this reduction can ensure the correctness of the solution under the assumption of no pattern repeats more than `starnum` times.
 
-The synthesizer successfully synthesized the regular expression for 000-255, that is `(([2-2][0-5][0-5]|[0-1][0-9][0-9])|2[0-4][6-9])`, in 4s, with 8 positive examples and 6 negative examples.
-
 I wrote two examples. One is a regular expression for 000-255, another is for every positive number without leading zeros.
 
 1. 000-255. I didn't implement the lookahead constructs so the handwritten regex is `[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]`. The sketch is defined as follows
