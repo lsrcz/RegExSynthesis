@@ -2,7 +2,7 @@
 
 ## Matching the RegEx by building the NFA
 
-In the directory [RegExNFA](./RegExNFA/). I wrote a simple RegEx engine by converting the RegExes to NFAs, and eliminating the epsilon transitions. The method was straightforward but it encountered severe scalability issue. It could not synthesize any non-trivial RegEx before using up the RAM of my PC.
+In the directory [RegExNFA](./RegExNFA/). I wrote a simple RegEx engine by converting the RegExes to NFAs, and eliminating the epsilon transitions. The method was straightforward but it encountered severe scaling issue. It could not synthesize any non-trivial RegEx before using up the RAM of my PC.
 
 Converting the RegEx to NFA is a simple job, and it is hard to write the function in a solver-friendly way. So I did not go deeper.
 
