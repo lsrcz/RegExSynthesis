@@ -73,3 +73,5 @@ The synthesizer successfully synthesized `(((([1-9][0-9]|2[0-4][0-9])|[0-9])|2[0
 ```
 
 The synthesizer successfully synthesized `([0-9]|[1-9]([0-9])*)` in 13s, with 11 examples.
+
+I didn't implement the interactive synthesize for this method, since it could be implemented with the same techniques for synthesizing the DFAs.
