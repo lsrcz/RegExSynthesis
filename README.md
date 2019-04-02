@@ -74,4 +74,4 @@ The synthesizer successfully synthesized `([0-9]|[1-9]([0-9])*)` in 13s, with 11
 
 I did not implement interactive synthesis for this method since it could be implemented with the same techniques for synthesizing the DFAs.
 
-The code is in [RegExEncoding](./RegExEncoding/).
+The code is in [RegExEncoding](./RegExEncoding/). It's a little tricky.
