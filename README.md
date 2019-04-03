@@ -80,9 +80,9 @@ The code is in [RegExEncoding](./RegExEncoding/). It's a little tricky.
 
 ##### Why I don't use the register form?
 
-The register form, or the SSA-like form, is not suitable for current implementation. It is equivalent to the defining the regex as ASTs and cannot improve efficiency.
+The register form, or the SSA-like form, is not suitable for current implementation. It is equivalent to defining the regex as ASTs and cannot improve efficiency.
 
-The current implementation don't have a conventional 'interpreter' for the regexes. It introduces new symbolic values when trying to match the strings. Although the register form can reduce some same sub-expression into one instruction in the register form, it won't reduce the number of symbolic values or the solving complexity, but make the things worse.
+The current implementation don't have a conventional 'interpreter' for the regexes. It introduces new symbolic values when trying to match the strings. Although the register form can reduce some same sub-expression into one instruction in the register form, it won't reduce the number of symbolic values or the complexity of solving, but make the things worse.
 
 For example, part of the sketch could be as follows (where `0` means the instruction right before the current instruction, and `select a b` means `a|b`):
 
@@ -109,7 +109,7 @@ Take another example,
 
 If we try to expand the Kleene star for depth `p`, the sequence of n `star 0`s will cause the matcher to insert (p-1)((p-1)^n-1)/(p-2)+1 fresh symbolic boolean values. It is O((p-1)^n). That is not acceptable.
 
-Although the issue can be resolved by prune the sketch space, such as ensuring the first component of `select` or `concat` instruction is not of the same opcode, and banning the nested star. But how to deal with this one:
+Although the issue can be resolved by pruning the sketch space, such as ensuring the first component of `select` or `concat` instruction is not of the same opcode, and banning the nested star. But how to deal with this one:
 
 ```racket
 (list (...)
@@ -131,6 +131,6 @@ Or this one:
       (...))
 ```
 
-We cannot filter out **all** the 'bad' sketches without lost of the ability to express the whole program space. And if we allow that lost to appear, it is hard to develop a generic algorithm to prune the sketch space for different problems. So I hold the opinion that it is necessary to use a handcrafted sketch with user's knowledge in this problem, or at least in this implementation.
+We cannot filter out **all** the 'bad' sketches without the loss of the ability to express the whole program space. And if we allow the loss, it is still hard to develop a generic algorithm to prune the sketch space for different problems. So I hold the opinion that it is necessary to use a handcrafted sketch with user's knowledge in this problem, or at least in this implementation.
 
 
